@@ -1,2 +1,6 @@
+
 # TheMelodyProject
-This Is a repo for my servers Discord Bot
+
+### A Repository for Decency's Bot
+
+Join us here: [Discord Server](https://discord.gg/7z7DdBCYSN)

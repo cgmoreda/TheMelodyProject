@@ -1,0 +1,5 @@
+{
+    "discord_token": "value",
+    "cf_username": "value", // for melody 
+    "cf_password": "value"
+}
