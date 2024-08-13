@@ -1,4 +1,4 @@
-@set "VIRTUAL_ENV=C:\Users\mhass\Desktop\ai project may24\RDNAv1\venv"
+@set "VIRTUAL_ENV=C:\Users\mhass\Desktop\Projects\TheMelodyProject\venv"
 
 @if defined _OLD_VIRTUAL_PROMPT (
     @set "PROMPT=%_OLD_VIRTUAL_PROMPT%"
