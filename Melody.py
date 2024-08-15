@@ -5,7 +5,7 @@ import requests
 from discord.ext import commands
 
 from GlobalVariable import DISCORD_TOKEN
-from LogicCores.CFHelpers import  CFrateof, get_cfverify
+from LogicCores.CFHelpers import cf_rateof, get_cfverify
 
 intents = discord.Intents.all()
 bot = commands.Bot(command_prefix="!", intents=intents)
@@ -35,12 +35,12 @@ async def on_message(message):
     await bot.process_commands(message)
 
 
+m = {}
+m[ "user_codes" ] = {}
+m[ "user_handles" ] = {}
 
-bot.user_codes = {}
-bot.user_handles = {}
-
-bot.command()(CFrateof)
-bot.command()(get_cfverify(bot))
+bot.command()(cf_rateof)
+bot.command()(get_cfverify(m))
 
 
 # Initialize bot state
