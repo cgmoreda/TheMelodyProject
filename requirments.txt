@@ -1,3 +1,6 @@
 discord
 requests
 beautifulsoup4
+selnium
+undetected-chromedriver
+webdriver_manager

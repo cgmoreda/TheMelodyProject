@@ -1,11 +1,9 @@
-import time
-from typing import ChainMap
 import discord
-import requests
 from discord.ext import commands
+from APICores import CodeForcesAPI
 from APICores.YoutubeAPI import check_new_video
 from GlobalVariable import DISCORD_TOKEN
-from LogicCores.CFHelpers import  CFrateof, get_cfverify
+from LogicCores.CFHelpers import cf_rateof, get_cfverify
 
 intents = discord.Intents.all()
 bot = commands.Bot(command_prefix="!", intents=intents)
@@ -17,6 +15,7 @@ CHANNEL_ID = 1178599173680005170
 async def on_ready():
     check_new_video.start(bot)
     print("Bot is online!")
+    await CodeForcesAPI.ensure_login()
     channel = bot.get_channel(CHANNEL_ID)  # Replace with your channel ID
     if channel:
         await channel.send("Hello, I am online!")
@@ -30,19 +29,16 @@ async def on_message(message):
     if message.author == bot.user:
         return
     print(f"{message.author} sent ({message.content})")
-
-    await message.channel.send("Hello!")
+    if 'melody' in message.content:
+        await message.channel.send("Hello!")
     # Process commands if you have any command handlers
     await bot.process_commands(message)
 
 
+m = {"user_codes": {}, "user_handles": {}}
 
-bot.user_codes = {}
-bot.user_handles = {}
-
-bot.command()(CFrateof)
-bot.command()(get_cfverify(bot))
-
+bot.command()(cf_rateof)
+bot.command()(get_cfverify(m))
 
 # Initialize bot state
 bot.run(DISCORD_TOKEN)
