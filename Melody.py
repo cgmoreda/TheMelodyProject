@@ -3,7 +3,7 @@ from typing import ChainMap
 import discord
 import requests
 from discord.ext import commands
-
+from APICores.YoutubeAPI import check_new_video
 from GlobalVariable import DISCORD_TOKEN
 from LogicCores.CFHelpers import  CFrateof, get_cfverify
 
@@ -15,6 +15,7 @@ CHANNEL_ID = 1178599173680005170
 
 @bot.event
 async def on_ready():
+    check_new_video.start(bot)
     print("Bot is online!")
     channel = bot.get_channel(CHANNEL_ID)  # Replace with your channel ID
     if channel:
