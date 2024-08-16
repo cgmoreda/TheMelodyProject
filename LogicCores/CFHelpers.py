@@ -8,7 +8,7 @@ import requests
 from APICores.DiscordAPI import assignRole
 
 from APICores import CodeForcesAPI
-from APICores.CodeForcesAPI import login_to_codeforces, check_code_on_codeforces, check_login
+from APICores.CodeForcesAPI import ensure_login, check_code_on_codeforces, check_login
 from GlobalVariable import ranks
 
 
@@ -55,9 +55,9 @@ def get_cfverify(bot):
         # Notify user that checking will start
         await ctx.send(f"Checking Codeforces for handle `{handle}`...")
 
-        login_to_codeforces()
+        await ensure_login()
 
-        if check_login():
+        if await check_login():
             if await check_code_on_codeforces(
                     handle,
                     code,

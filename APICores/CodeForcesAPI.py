@@ -1,20 +1,14 @@
+import undetected_chromedriver as uc
+import requests
 import asyncio
-from selenium import webdriver
+
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.common.by import By
 from GlobalVariable import CF_PASSWORD, update_config_JSESSIONID
 from GlobalVariable import CF_USERNAME
 from GlobalVariable import jsessionid
-import cloudscraper
-import requests
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome.options import Options
-from webdriver_manager.chrome import ChromeDriverManager
-import undetected_chromedriver as uc
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 from bs4 import BeautifulSoup
-import time
 
 
 async def get_max_rate(handle: str) -> int:
@@ -46,65 +40,49 @@ async def get_max_rate(handle: str) -> int:
 LOGIN_URL = "https://codeforces.com/enter"
 TALK_URL = "https://codeforces.com/usertalk/with/"
 
+options = uc.ChromeOptions()
+options.headless = False
+_driver = uc.Chrome(options=options)
 
-def check_login() -> bool:
-    # Initialize Chrome options
-    options = uc.ChromeOptions()
-    options.headless = False  # Set to True if you want to run in headless mode
 
-    # Start the driver
-    driver = uc.Chrome(options=options)
-
-    # Navigate to the login page
-    driver.get(LOGIN_URL)
-
-    # Wait for the page to load completely before setting the cookie
-    driver.implicitly_wait(10)  # Adjust wait time if needed
-
-    # Set the JSESSIONID cookie
-    driver.add_cookie({'name': 'JSESSIONID', 'value': jsessionid,
-                       'domain': '.codeforces.com'})  # Use '.codeforces.com' for subdomains
-
-    # Refresh the page to apply the cookie
-    driver.refresh()
-
-    # Wait for the page to load completely
-    driver.implicitly_wait(10)  # Adjust wait time if needed
-
-    # Parse the page source
-    soup = BeautifulSoup(driver.page_source, "html.parser")
-
-    # Close the driver
-    driver.quit()
-
-    # Check if "Logout" is in the page text
-    if "Logout" in soup.get_text():
-        return True
-    else:
+async def check_login(driver=_driver) -> bool:
+    try:
+        await asyncio.sleep(2)
+        driver.get(LOGIN_URL)
+        await asyncio.sleep(2)
+        soup = BeautifulSoup(driver.page_source, "html.parser")
+        if "Logout" in soup.get_text():
+            return True
+        driver.delete_cookie('JSESSIONID')
+        await asyncio.sleep(1)
+        driver.add_cookie({'name': 'JSESSIONID', 'value': jsessionid, 'domain': 'codeforces.com'})
+        await asyncio.sleep(1)
+        driver.refresh()
+        await asyncio.sleep(2)
+        soup = BeautifulSoup(driver.page_source, "html.parser")
+        if "Logout" in soup.get_text():
+            return True
+        else:
+            return False
+    except Exception as e:
+        print(f"An error occurred: {e}")
         return False
 
 
-def login_to_codeforces():
+async def ensure_login(driver=_driver) -> bool:
     # Start a Chrome session with undetected-chromedriver
-    if check_login():
+
+    if await check_login(driver):
         print("Already logged in!")
-        return
+        return True
     try:
-        options = uc.ChromeOptions()
-        options.headless = False
-        driver = uc.Chrome(options=options)
         driver.get(LOGIN_URL)
-        soup = BeautifulSoup(driver.page_source, "html.parser")
-        if "Logout" in soup.get_text() or ".Melody" in soup.get_text():
-            print("Login successful!")
-            return True
         # Wait for the username field to be present
         username = WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.ID, "handleOrEmail"))
         )
         username.click()
         username.send_keys(CF_USERNAME)
-
         password = WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.ID, "password"))
         )
@@ -117,17 +95,11 @@ def login_to_codeforces():
         login_button = driver.find_element(By.CLASS_NAME, "submit")
         login_button.click()
 
-        time.sleep(5)  # Wait for page to load
+        driver.implicitly_wait(10)
 
-        # Check if login was successful
         soup = BeautifulSoup(driver.page_source, "html.parser")
         if "Logout" in soup.get_text() or ".Melody" in soup.get_text():
-
-            cookies = driver.get_cookies()
-            for cookie in cookies:
-                if cookie['name'] == 'JSESSIONID':
-                    update_config_JSESSIONID(cookie['value'])
-                    break
+            update_config_JSESSIONID(driver.get_cookie('JSESSIONID'))
             print("Login successful!")
             return True
         else:
@@ -142,26 +114,20 @@ def login_to_codeforces():
         driver.quit()
 
 
-#############################################################################################################################################
-
-
 # Check for the code on Codeforces user talk page
 async def check_code_on_codeforces(
         handle: str, code: str
 ) -> bool:
-    session = requests.Session()
-    session.cookies.set('JSESSIONID', jsessionid)
+    driver = _driver
     url = TALK_URL + handle
     timeout = 120  # 2 minute
-
+    driver.get(url)
+    await asyncio.sleep(20)
     for _ in range(timeout // 5):  # max 2 minute
-        response = session.get(url)
-        soup = BeautifulSoup(response.text, "html.parser")
+        driver.refresh()
+        soup = BeautifulSoup(driver.page_source, "html.parser")
         if code in soup.get_text():
             return True
         await asyncio.sleep(5)  # Wait 10 seconds before checking again
 
     return False
-
-
-login_to_codeforces()

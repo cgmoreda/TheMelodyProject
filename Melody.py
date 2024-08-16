@@ -1,9 +1,6 @@
-import time
-from typing import ChainMap
 import discord
-import requests
 from discord.ext import commands
-
+from APICores import CodeForcesAPI
 from GlobalVariable import DISCORD_TOKEN
 from LogicCores.CFHelpers import cf_rateof, get_cfverify
 
@@ -16,6 +13,7 @@ CHANNEL_ID = 1178599173680005170
 @bot.event
 async def on_ready():
     print("Bot is online!")
+    await CodeForcesAPI.ensure_login()
     channel = bot.get_channel(CHANNEL_ID)  # Replace with your channel ID
     if channel:
         await channel.send("Hello, I am online!")
@@ -29,15 +27,13 @@ async def on_message(message):
     if message.author == bot.user:
         return
     print(f"{message.author} sent ({message.content})")
-
-    await message.channel.send("Hello!")
+    if 'melody' in message.content:
+        await message.channel.send("Hello!")
     # Process commands if you have any command handlers
     await bot.process_commands(message)
 
 
-m = {}
-m["user_codes"] = {}
-m["user_handles"] = {}
+m = {"user_codes": {}, "user_handles": {}}
 
 bot.command()(cf_rateof)
 bot.command()(get_cfverify(m))
