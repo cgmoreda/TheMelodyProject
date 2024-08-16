@@ -3,7 +3,6 @@ from typing import ChainMap
 import discord
 import requests
 from discord.ext import commands
-
 from APICores.YoutubeAPI import check_new_video
 from GlobalVariable import DISCORD_TOKEN
 from LogicCores.CFHelpers import  CFrateof, get_cfverify
@@ -45,5 +44,5 @@ bot.command()(CFrateof)
 bot.command()(get_cfverify(bot))
 
 
-# Initialize bot state4
+# Initialize bot state
 bot.run(DISCORD_TOKEN)

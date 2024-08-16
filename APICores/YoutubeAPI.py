@@ -1,14 +1,10 @@
-import discord
 from discord.ext import commands, tasks
 from googleapiclient.discovery import build
 from datetime import datetime, timezone, timedelta
-import os
-
 from GlobalVariable import YOUTUBE_API_KEY
 from GlobalVariable import CHANNEL_ID
 
 youtube = build('youtube', 'v3', developerKey=YOUTUBE_API_KEY)
-
 last_video_id = None
 
 @tasks.loop(minutes=1)
@@ -37,7 +33,7 @@ async def check_new_video(bot : commands.Bot):
     timeNow = datetime.now(timezone.utc)
 
     # Check if the video is new (published in the last 30 minutes)
-    if video_id != last_video_id and (timeNow - publisheAtDate) <= timedelta(hours=120):
+    if video_id != last_video_id and (timeNow - publisheAtDate) <= timedelta(minutes=30):
         last_video_id = video_id
         channel = bot.get_channel(1272994154405957656)
         if channel:
