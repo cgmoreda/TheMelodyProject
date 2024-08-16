@@ -1,9 +1,6 @@
 discord
 requests
 beautifulsoup4
-selenium
-mechanize
-browsermob-proxy
+selnium
 undetected-chromedriver
-cloudscraper
 webdriver_manager
