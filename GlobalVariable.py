@@ -16,11 +16,13 @@ ranks = [
 CF_PASSWORD = ""
 CF_USERNAME = ""
 DISCORD_TOKEN = ""
-jsessionid = ""
 
+jsessionid = ""
+YOUTUBE_API_KEY = ""
+CHANNEL_ID = ""
 
 def load_config():
-    global CF_PASSWORD, CF_USERNAME, DISCORD_TOKEN, jsessionid
+    global CF_PASSWORD, CF_USERNAME, DISCORD_TOKEN, jsessionid, YOUTUBE_API_KEY, CHANNEL_ID
 
     with open("config.json") as config_file:
         config = json.load(config_file)
@@ -29,7 +31,8 @@ def load_config():
     CF_PASSWORD = config["cf_password"]
     DISCORD_TOKEN = config["discord_token"]
     jsessionid = config["JSESSIONID"]
-
+    YOUTUBE_API_KEY = config["youtube_api_key"]
+    CHANNEL_ID = config["channel_id"]
 
 def update_config_JSESSIONID(_jsessionid: str):
     global jsessionid

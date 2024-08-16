@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 from APICores import CodeForcesAPI
+from APICores.YoutubeAPI import check_new_video
 from GlobalVariable import DISCORD_TOKEN
 from LogicCores.CFHelpers import cf_rateof, get_cfverify
 
@@ -12,6 +13,7 @@ CHANNEL_ID = 1178599173680005170
 
 @bot.event
 async def on_ready():
+    check_new_video.start(bot)
     print("Bot is online!")
     await CodeForcesAPI.ensure_login()
     channel = bot.get_channel(CHANNEL_ID)  # Replace with your channel ID
