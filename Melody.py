@@ -3,7 +3,7 @@ from discord.ext import commands
 from APICores import CodeForcesAPI
 from APICores.YoutubeAPI import check_new_video
 from GlobalVariable import DISCORD_TOKEN
-from LogicCores.CFHelpers import cf_rateof, get_cfverify
+from LogicCores.CFHelpers import cf_rateof, cfverify
 
 intents = discord.Intents.all()
 bot = commands.Bot(command_prefix="!", intents=intents)
@@ -17,7 +17,7 @@ async def on_ready():
     print("Bot is online!")
     await CodeForcesAPI.ensure_login()
     channel = bot.get_channel(CHANNEL_ID)  # Replace with your channel ID
-    if channel:
+    if channel and isinstance(channel, discord.TextChannel):
         await channel.send("Hello, I am online!")
     else:
         print("Channel not found")
@@ -35,10 +35,9 @@ async def on_message(message):
     await bot.process_commands(message)
 
 
-m = {"user_codes": {}, "user_handles": {}}
 
 bot.command()(cf_rateof)
-bot.command()(get_cfverify(m))
+bot.command()(cfverify)
 
 # Initialize bot state
 bot.run(DISCORD_TOKEN)
