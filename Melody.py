@@ -36,12 +36,11 @@ async def on_message(message):
 
 
 m = {}
-m[ "user_codes" ] = {}
-m[ "user_handles" ] = {}
+m["user_codes"] = {}
+m["user_handles"] = {}
 
 bot.command()(cf_rateof)
 bot.command()(get_cfverify(m))
-
 
 # Initialize bot state
 bot.run(DISCORD_TOKEN)

@@ -4,3 +4,6 @@ beautifulsoup4
 selenium
 mechanize
 browsermob-proxy
+undetected-chromedriver
+cloudscraper
+webdriver_manager
