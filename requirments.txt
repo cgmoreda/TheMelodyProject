@@ -1,6 +1,7 @@
 discord
 requests
 beautifulsoup4
-selnium
+selenium
 undetected-chromedriver
 webdriver_manager
+google_api_python_client
