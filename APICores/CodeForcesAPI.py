@@ -95,8 +95,7 @@ async def ensure_login(driver=_driver) -> bool:
         login_button = driver.find_element(By.CLASS_NAME, "submit")
         login_button.click()
 
-        driver.implicitly_wait(10)
-
+        await asyncio.sleep(5)
         soup = BeautifulSoup(driver.page_source, "html.parser")
         if "Logout" in soup.get_text() or ".Melody" in soup.get_text():
             update_config_JSESSIONID(driver.get_cookie('JSESSIONID'))
@@ -105,6 +104,7 @@ async def ensure_login(driver=_driver) -> bool:
         else:
             print("Login failed or not detected properly.")
             return False
+        await asyncio.sleep(2)
 
     except Exception as e:
         print(f"An error occurred: {e}")
