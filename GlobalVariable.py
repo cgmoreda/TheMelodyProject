@@ -1,4 +1,19 @@
+import logging
+import sys
 import json
+
+# Set up basic logging configuration
+logging.basicConfig(
+    stream=sys.stdout,  # Logs to standard output (stdout)
+    level=logging.INFO,  # Set log level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+)
+
+# Example usage
+logger = logging.getLogger(__name__)
+
+#logger.info("This is an info message.")
+#logger.error("This is an error message.")
 
 ranks = [
     "Newbie",
