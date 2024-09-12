@@ -47,5 +47,8 @@ RUN pip install -r requirments.txt
 # Copy application files
 COPY . /app
 
+EXPOSE 443:443 
+EXPOSE 80:80
+
 # Default command to run the script
 CMD ["/app/start.sh" ]

@@ -103,7 +103,6 @@ async def ensure_login(driver=_driver) -> bool:
         soup = BeautifulSoup(driver.page_source, "html.parser")
         if "Logout" in soup.get_text() or ".Melody" in soup.get_text():
             global jsessionid
-
             jsessionid = driver.get_cookie('JSESSIONID')
             logger.info("Login successful!")
             return True
@@ -117,7 +116,8 @@ async def ensure_login(driver=_driver) -> bool:
         return False
 
     finally:
-        driver.quit()
+        # driver.quit() # this is reda's fulat
+        pass
 
 
 # Check for the code on Codeforces user talk page
