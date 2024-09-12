@@ -5,11 +5,15 @@ import asyncio
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
-from GlobalVariable import CF_PASSWORD, update_config_JSESSIONID
-from GlobalVariable import CF_USERNAME
-from GlobalVariable import jsessionid
 from bs4 import BeautifulSoup
+from GlobalVariable import (
+    CF_PASSWORD,
+    CF_USERNAME,
+    logger
+)
 
+
+jsessionid = ""
 
 async def get_max_rate(handle: str) -> int:
     # Codeforces API endpoint for rating history
@@ -31,7 +35,7 @@ async def get_max_rate(handle: str) -> int:
             return max_rating
 
     except BaseException as e:
-        print(e)
+        logger.error(e)
     return -1
 
 
@@ -65,7 +69,7 @@ async def check_login(driver=_driver) -> bool:
         else:
             return False
     except Exception as e:
-        print(f"An error occurred: {e}")
+        logger.error(e)
         return False
 
 
@@ -73,7 +77,7 @@ async def ensure_login(driver=_driver) -> bool:
     # Start a Chrome session with undetected-chromedriver
 
     if await check_login(driver):
-        print("Already logged in!")
+        logger.info("Already logged in!")
         return True
     try:
         driver.get(LOGIN_URL)
@@ -98,20 +102,22 @@ async def ensure_login(driver=_driver) -> bool:
         await asyncio.sleep(5)
         soup = BeautifulSoup(driver.page_source, "html.parser")
         if "Logout" in soup.get_text() or ".Melody" in soup.get_text():
-            update_config_JSESSIONID(driver.get_cookie('JSESSIONID'))
-            print("Login successful!")
+            global jsessionid
+            jsessionid = driver.get_cookie('JSESSIONID')
+            logger.info("Login successful!")
             return True
         else:
-            print("Login failed or not detected properly.")
+            logger.info("Login failed or not detected properly.")
             return False
         await asyncio.sleep(2)
 
     except Exception as e:
-        print(f"An error occurred: {e}")
+        logger.info(f"An error occurred: {e}")
         return False
 
     finally:
-        driver.quit()
+        # driver.quit() # this is reda's fulat
+        pass
 
 
 # Check for the code on Codeforces user talk page
