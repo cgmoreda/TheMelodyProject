@@ -1,4 +1,20 @@
-import json
+import logging
+import sys
+
+# Set up basic logging configuration
+logging.basicConfig(
+    stream=sys.stdout,  # Logs to standard output (stdout)
+    level=logging.INFO,  # Set log level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+)
+
+import os
+
+# Example usage
+logger = logging.getLogger(__name__)
+
+# logger.info("This is an info message.")
+# logger.error("This is an error message.")
 
 ranks = [
     "Newbie",
@@ -13,39 +29,18 @@ ranks = [
     "Legendary Grandmaster",
 ]
 
-CF_PASSWORD = ""
-CF_USERNAME = ""
-DISCORD_TOKEN = ""
-
-jsessionid = ""
-YOUTUBE_API_KEY = ""
-CHANNEL_ID = ""
-
-def load_config():
-    global CF_PASSWORD, CF_USERNAME, DISCORD_TOKEN, jsessionid, YOUTUBE_API_KEY, CHANNEL_ID
-
-    with open("config.json") as config_file:
-        config = json.load(config_file)
-
-    CF_USERNAME = config["cf_username"]
-    CF_PASSWORD = config["cf_password"]
-    DISCORD_TOKEN = config["discord_token"]
-    jsessionid = config["JSESSIONID"]
-    YOUTUBE_API_KEY = config["youtube_api_key"]
-    CHANNEL_ID = config["channel_id"]
-
-def update_config_JSESSIONID(_jsessionid: str):
-    global jsessionid
-
-    with open("config.json") as config_file:
-        config = json.load(config_file)
-
-    config["JSESSIONID"] = _jsessionid
-
-    with open("config.json", 'w') as f:
-        json.dump(config, f, indent=4)
-
-    load_config()
+# CF_PASSWORD = ""
+# CF_USERNAME = ""
+# DISCORD_TOKEN = ""
+#
+# YOUTUBE_API_KEY = ""
+# CHANNEL_ID = ""
 
 
-load_config()
+CF_USERNAME = os.environ["cf_username"]
+CF_PASSWORD = os.environ["cf_password"]
+DISCORD_TOKEN = os.environ["discord_token"]
+YOUTUBE_API_KEY = os.environ["youtube_api_key"]
+CHANNEL_ID = os.environ["channel_id"]
+
+

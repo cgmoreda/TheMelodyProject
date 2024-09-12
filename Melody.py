@@ -29,11 +29,10 @@ async def on_message(message):
     if message.author == bot.user:
         return
     print(f"{message.author} sent ({message.content})")
-    if 'melody' in message.content:
+    if "melody" in message.content:
         await message.channel.send("Hello!")
     # Process commands if you have any command handlers
     await bot.process_commands(message)
-
 
 
 bot.command()(cf_rateof)
