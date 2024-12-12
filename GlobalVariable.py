@@ -1,5 +1,6 @@
 import logging
 import sys
+from dotenv import load_dotenv
 
 # Set up basic logging configuration
 logging.basicConfig(
@@ -9,6 +10,8 @@ logging.basicConfig(
 )
 
 import os
+
+load_dotenv()
 
 # Example usage
 logger = logging.getLogger(__name__)
