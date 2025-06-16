@@ -1,11 +1,12 @@
 import random
 import string
+import asyncio
 
 
 from APICores.DiscordAPI import assignRole
 
 from APICores import CodeForcesAPI
-from APICores.CodeForcesAPI import ensure_login, check_code_on_codeforces, check_login
+from APICores.CodeForcesAPI import check_code_on_codeforces
 from GlobalVariable import ranks
 
 
@@ -40,8 +41,8 @@ async def cfverify(ctx, handle):
 
     # Send the code to the user
     await ctx.send(
-        f"""{ctx.author} your code for handle {handle} is: ```{code}``` \n
-        send the code to: https://codeforces.com/profile/.Melody"""
+        f"{ctx.author}, here is your code for the handle {handle}:\n```{code}```"
+        f"\nPlease update your first name on Codeforces."
     )
 
     # Store the code and handle
@@ -51,24 +52,23 @@ async def cfverify(ctx, handle):
     # Notify user that checking will start
     await ctx.send(f"Checking Codeforces for handle `{handle}`...")
 
-    await ensure_login()
+    verified = False
+    for _ in range(24):
+        if await check_code_on_codeforces(handle, code):
+            verified = True
+            break
+        await asyncio.sleep(5)
 
-    if await check_login():
-        if await check_code_on_codeforces(
-            handle,
-            code,
-        ):
-            print(f"found {handle} for user {ctx.author}")
-            await ctx.send(f"Verified successfully `{handle}`to {ctx.author}!")
-            role = get_rank(await CodeForcesAPI.get_max_rate(handle))
-            user_id = ctx.author.id
-            await assignRole(user_id, ctx, role)
-        else:
-            await ctx.send(
-                "Failed to verify.\nmake sure to send the code before 1 minute"
-            )
+    if verified:
+        print(f"found {handle} for user {ctx.author}")
+        await ctx.send(f"Verified successfully `{handle}` to {ctx.author}!")
+        role = get_rank(await CodeForcesAPI.get_max_rate(handle))
+        user_id = ctx.author.id
+        await assignRole(user_id, ctx, role)
     else:
-        await ctx.send("Failed to log in to Codeforces. try again later")
+        await ctx.send(
+            f"Failed to verify{handle}.\nmake sure to send the code before 2 minute"
+        )
 
 
 

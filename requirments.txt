@@ -2,7 +2,7 @@ discord
 requests
 beautifulsoup4
 selenium
-undetected-chromedriver
+httpx
 webdriver_manager
 google_api_python_client
 python-dotenv
