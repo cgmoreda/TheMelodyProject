@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-# from APICores.YoutubeAPI import check_new_video
+from APICores.YoutubeAPI import check_new_video
 from GlobalVariable import DISCORD_TOKEN
 from LogicCores.CFHelpers import cf_rateof, cfverify
 
@@ -12,7 +12,7 @@ CHANNEL_ID = 1178599173680005170
 
 @bot.event
 async def on_ready():
-    # check_new_video.start(bot)
+    check_new_video.start(bot)
     print("Bot is online!")
     channel = bot.get_channel(CHANNEL_ID)  # Replace with your channel ID
     # if channel and isinstance(channel, discord.TextChannel):

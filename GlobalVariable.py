@@ -43,7 +43,7 @@ CF_USERNAME     = config.get("cf_username")     or os.getenv("cf_username", "")
 CF_PASSWORD     = config.get("cf_password")     or os.getenv("cf_password", "")
 JSESSIONID      = config.get("JSESSIONID")      or os.getenv("JSESSIONID", "")
 YOUTUBE_API_KEY = config.get("youtube_api_key") or os.getenv("youtube_api_key", "")
-CHANNEL_ID      = config.get("channel_id")      or os.getenv("channel_id", "")
+# CHANNEL_ID      = config.get("channel_id")      or os.getenv("channel_id", "")
 
 # Validate required settings
 missing = []
